@@ -3,6 +3,7 @@
 # file: godaddy23.rb
 
 # see https://developer.godaddy.com/doc/endpoint/domains#/
+# to view or create new API keys, see https://developer.godaddy.com/keys
 
 # For the OTE environment, use   https://api.ote-godaddy.com
 # For the production environment, use https://api.godaddy.com
@@ -36,6 +37,34 @@ module GoDaddy23
     def details(domain)
       submit(domain)
     end
+    
+    # Retrieve DNS Records for the specified Domain, optionally with the
+    # specified Type and/or Name
+    #
+    #   type: e.g. A
+    #   name: e.g. www
+    #
+    # curl -X 'GET' \
+    #   'https://api.godaddy.com/v1/domains/[MYDOMAIN]' \
+    #   -H 'accept: application/json' \
+    #   -H 'Authorization: sso-key [APIKEY]:[SECRET]
+    #
+    def list_records(domain, type: nil, name: nil)
+      
+      uri = domain
+      uri += '/records'
+      uri += '/' + type if type
+      
+      if name then
+        uri += '/A' if type.nil?
+        uri += '/' + name
+      end
+      
+      submit(uri)
+      
+    end
+    
+    private
 
     def submit(s)
 
