@@ -27,11 +27,11 @@
 # n/a # DELETE # /v1/domains/{domain}/privacy # Submit a privacy cancellation request for the given domain
 # n/a # POST # /v1/domains/{domain}/privacy/purchase # Purchase privacy for a specified domain
 # n/a # PATCH # /v1/domains/{domain}/records # Add the specified DNS Records to the specified Domain
-# n/a # PUT # /v1/domains/{domain}/records # Replace all DNS Records for the specified Domain
+# replace_records # PUT # /v1/domains/{domain}/records # Replace all DNS Records for the specified Domain
 # list_records # GET # /v1/domains/{domain}/records/{type}/{name} # Retrieve DNS Records for the specified Domain, optionally with the specified Type and/or Name
 # replace_records # PUT # /v1/domains/{domain}/records/{type}/{name} # Replace all DNS Records for the specified Domain with the specified Type and Name
 # n/a # DELETE # /v1/domains/{domain}/records/{type}/{name} # Delete all DNS Records for the specified Domain with the specified Type and Name
-# n/a # PUT # /v1/domains/{domain}/records/{type} # Replace all DNS Records for the specified Domain with the specified Type
+# replace_records # PUT # /v1/domains/{domain}/records/{type} # Replace all DNS Records for the specified Domain with the specified Type
 # n/a # POST # /v1/domains/{domain}/renew # Renew the specified Domain
 # n/a # POST # /v1/domains/{domain}/transfer # Purchase and start or restart transfer process
 # n/a # POST # /v1/domains/{domain}/verifyRegistrantEmail # Re-send Contact E-mail Verification for specified Domain
@@ -90,6 +90,24 @@ module GoDaddy23
       
     end
     
+    # Replace all DNS Records for the specified Domain with the specified Type and Name
+    #
+    #   type: e.g. A
+    #   name: e.g. www    
+    #
+    # warning: be careful if you don't supply a type and name as you may 
+    #          accidentally remove existing records if they are not being 
+    #          updated using the *records* keyword parameter
+    #
+    # curl -X 'PUT' \
+    #   'https://api.godaddy.com/v1/domains/[DOMAIN]/records/[TYPE]/[NAME]' \
+    #   -H 'accept: application/json' \
+    #   -H 'Content-Type: application/json' \
+    #   -H 'Authorization: sso-key [APIKEY]:[SECRET]' \
+    #   -d '[
+    # {"data":"[NEW_IP]","ttl":600}
+    # ]'    
+    #
     def replace_records(domain, type: nil, name: nil, records: [])
       
       uri = domain
